@@ -324,7 +324,7 @@ echo "=========================================="
     --tags_offset 0x01e00000 \
     --pagesize 4096 \
     --id \
-    -o "$ROOT_DIR/boot_polaris_singleboot.img"
+    -o "$ROOT_DIR/boot.img"
 
 
 # ============================================================
