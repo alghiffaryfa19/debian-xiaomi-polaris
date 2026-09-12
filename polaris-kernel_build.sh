@@ -419,15 +419,17 @@ git clone \
     https://github.com/alghiffaryfa19/firmware-xiaomi-polaris \
     "$ROOT_DIR/polaris-firmware"
 
+# Copy seluruh isi repository firmware ke root package.
+# Repository sudah memiliki lib/firmware.
+mkdir -p "$ROOT_DIR/firmware-xiaomi-polaris/usr/lib/firmware"
 
-mkdir -p \
-    "$ROOT_DIR/firmware-xiaomi-polaris/usr/lib/firmware"
-
-
-# Copy firmware
 cp -a \
-    "$ROOT_DIR/polaris-firmware/." \
-    "$ROOT_DIR/firmware-xiaomi-polaris/usr/lib/firmware/"
+  "$ROOT_DIR/polaris-firmware/lib/firmware/." \
+  "$ROOT_DIR/firmware-xiaomi-polaris/usr/lib/firmware/"
+
+echo ""
+echo "Firmware package structure:"
+find "$ROOT_DIR/firmware-xiaomi-polaris" -maxdepth 3 -print
 
 
 # ============================================================
