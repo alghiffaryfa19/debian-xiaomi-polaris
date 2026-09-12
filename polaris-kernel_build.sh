@@ -21,7 +21,7 @@ export STRIP="llvm-strip"
 
 cd ..
 git clone https://github.com/alghiffaryfa19/firmware-xiaomi-polaris polaris-firmware
-cd polaris-firmware
+#cd polaris-firmware
 
 cd ..
 mkdir -p firmware-xiaomi-polaris/usr/lib/firmware
@@ -30,6 +30,23 @@ cp -r polaris-firmware/* firmware-xiaomi-polaris/usr/
 git clone https://gitlab.com/sdm845-mainline/alsa-ucm-conf
 mkdir -p alsa-xiaomi-polaris/usr/share/alsa
 cp -r alsa-ucm-conf/ucm2 alsa-xiaomi-polaris/usr/share/alsa/
+
+
+echo "===== PACKAGE STRUCTURE ====="
+
+echo "--- firmware ---"
+pwd
+ls -la firmware-xiaomi-polaris
+ls -la firmware-xiaomi-polaris/DEBIAN || true
+ls -la firmware-xiaomi-polaris/DEBIAN/control || true
+
+echo "--- alsa ---"
+ls -la alsa-xiaomi-polaris
+ls -la alsa-xiaomi-polaris/DEBIAN || true
+ls -la alsa-xiaomi-polaris/DEBIAN/control || true
+
+echo "--- git tracked control files ---"
+git ls-files | grep -E '(^|/)DEBIAN/control$|(^|/)debian/control$' || true
 
 dpkg-deb --build --root-owner-group firmware-xiaomi-polaris
 dpkg-deb --build --root-owner-group alsa-xiaomi-polaris
