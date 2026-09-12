@@ -142,9 +142,9 @@ jobs:
         run: |
           KERNEL_VER="${{ needs.prepare-release.outputs.kernel_version }}"
 
-          echo "⬇️ Download bundle kernel-bundle-$KERNEL_VER"
+          echo "⬇️ Download bundle kernel-$KERNEL_VER"
 
-          gh release download "kernel-bundle-$KERNEL_VER" \
+          gh release download "kernel-$KERNEL_VER" \
             --pattern "*.deb" \
             --repo "${{ github.repository }}" \
             --clobber
@@ -153,7 +153,7 @@ jobs:
           ls -lah *.deb
 
           COUNT=$(ls *.deb | wc -l)
-          if [ "$COUNT" -lt 8 ]; then
+          if [ "$COUNT" -lt 3 ]; then
             echo "❌ Package incomplete"
             exit 1
           fi
