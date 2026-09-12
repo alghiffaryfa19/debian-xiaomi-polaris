@@ -240,13 +240,21 @@ echo "=========================================="
 
 mkdir -p "$PKGDIR/boot"
 
-install -Dm644 \
-    arch/$ARCH/boot/Image.gz \
-    "$PKGDIR/boot/Image.gz"
-
-install -Dm644 \
-    arch/$ARCH/boot/Image \
-    "$PKGDIR/boot/Image"
+if [ -f arch/arm64/boot/Image.gz ]; then
+    echo "Using compressed kernel: Image.gz"
+    install -m 0644 \
+        arch/arm64/boot/Image.gz \
+        "$PKGDIR/boot/Image.gz"
+elif [ -f arch/arm64/boot/Image ]; then
+    echo "Using uncompressed kernel: Image"
+    install -m 0644 \
+        arch/arm64/boot/Image \
+        "$PKGDIR/boot/Image"
+else
+    echo "ERROR: No ARM64 kernel image found!"
+    find arch/arm64/boot -maxdepth 1 -type f -ls
+    exit 1
+fi
 
 install -Dm644 \
     arch/$ARCH/boot/dts/qcom/sdm845-xiaomi-polaris.dtb \
@@ -272,17 +280,30 @@ echo "=========================================="
 
 chmod +x "$ROOT_DIR/mkbootimg"
 
+KERNEL_IMAGE=""
+
+if [ -f arch/arm64/boot/Image.gz ]; then
+    KERNEL_IMAGE="arch/arm64/boot/Image.gz"
+elif [ -f arch/arm64/boot/Image ]; then
+    KERNEL_IMAGE="arch/arm64/boot/Image"
+else
+    echo "ERROR: Kernel image not found"
+    exit 1
+fi
+
+echo "Kernel image: $KERNEL_IMAGE"
+
 cat \
-    arch/arm64/boot/Image.gz \
+    "$KERNEL_IMAGE" \
     arch/arm64/boot/dts/qcom/sdm845-xiaomi-polaris.dtb \
-    > "$ROOT_DIR/Image.gz-dtb_polaris"
+    > "$ROOT_DIR/Image-dtb_polaris"
 
 install -Dm644 \
-    "$ROOT_DIR/Image.gz-dtb_polaris" \
-    "$PKGDIR/boot/Image.gz-dtb_polaris"
+    "$ROOT_DIR/Image-dtb_polaris" \
+    "$PKGDIR/boot/Image-dtb_polaris"
 
 mv \
-    "$ROOT_DIR/Image.gz-dtb_polaris" \
+    "$ROOT_DIR/Image-dtb_polaris" \
     "$ROOT_DIR/zImage_polaris"
 
 
