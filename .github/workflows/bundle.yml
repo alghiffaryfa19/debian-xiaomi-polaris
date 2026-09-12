@@ -1,0 +1,63 @@
+name: Build Kernel Bundle
+
+on:
+  workflow_run:
+    workflows: ["Build Kernel"]
+    types:
+      - completed
+
+  workflow_dispatch:
+    inputs:
+      kernel_version:
+        description: "Kernel version"
+        required: true
+        default: "7.1.0"
+
+jobs:
+  bundle:
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: write
+
+    # Jangan jalan kalau Build Kernel gagal
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+
+    env:
+      KERNEL_VERSION: ${{ inputs.kernel_version || '7.1' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all source releases
+        run: |
+          mkdir -p bundle
+          cd bundle
+
+          echo "⬇️ Download kernel packages"
+          gh release download "kernel-${KERNEL_VERSION}" \
+            --pattern "*.deb" \
+            --repo "${{ github.repository }}" \
+            --clobber || true
+
+          echo "📂 Final bundle:"
+          ls -lah
+
+          COUNT=$(ls *.deb 2>/dev/null | wc -l)
+          if [ "$COUNT" -lt 5 ]; then
+            echo "❌ Not enough packages"
+            exit 1
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create bundle release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: kernel-bundle-${{ env.KERNEL_VERSION }}
+          name: Kernel Bundle ${{ env.KERNEL_VERSION }}
+          files: bundle/*.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

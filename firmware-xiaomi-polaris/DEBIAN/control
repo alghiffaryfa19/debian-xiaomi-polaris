@@ -1,0 +1,8 @@
+Package: firmware-xiaomi-polaris
+Version: 2.0
+Architecture: arm64
+Maintainer: dev
+Conflicts: linux-firmware
+Replaces: linux-firmware
+Description: Firmware blobs & Configs for Xiaomi Mix 2s
+Depends: firmware-qcom-soc, firmware-atheros

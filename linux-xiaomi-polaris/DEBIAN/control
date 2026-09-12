@@ -1,0 +1,6 @@
+Package: linux-xiaomi-polaris
+Version: 7.1.0
+Architecture: arm64
+Maintainer: dev
+Section: kernel
+Description: Kernel and Modules for Xiaomi Mix 2s

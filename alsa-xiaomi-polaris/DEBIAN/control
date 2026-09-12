@@ -1,0 +1,6 @@
+Package: alsa-xiaomi-polaris
+Version: 1.0
+Architecture: arm64
+Maintainer: dev
+Depends: alsa-ucm-conf
+Description: Alsa Use Case Configuration for Xiaomi Mix 2s
