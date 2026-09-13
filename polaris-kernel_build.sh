@@ -318,7 +318,7 @@ echo "=========================================="
 
 "$ROOT_DIR/mkbootimg" \
     --kernel "$ROOT_DIR/zImage_polaris" \
-    --cmdline "root=PARTLABEL=userdata rootwait rw fsck.repair=yes" \
+    --cmdline "console=ttyMSM0,115200 earlycon loglevel=7 root=/dev/disk/by-partlabel/userdata rootwait rw" \
     --base 0x00000000 \
     --kernel_offset 0x00008000 \
     --tags_offset 0x01e00000 \
